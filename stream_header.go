@@ -52,21 +52,27 @@ func (h *StreamHeader) parse(reader *bufio.Reader) error {
 	h.Interlacing = itUnknown
 
 	var ok bool
-	var foundWidth, foundHeight bool
+	seen := map[byte]bool{}
 	for _, field := range fields {
-		switch field[0] {
+		tag := field[0]
+		// Every tag but X may appear at most once.
+		if tag != 'X' {
+			if seen[tag] {
+				return fmt.Errorf("%w: duplicate field: %v", errInvalidStreamHeader, field)
+			}
+			seen[tag] = true
+		}
+		switch tag {
 		case 'W':
 			h.Width, err = strconv.Atoi(field[1:])
 			if err != nil {
 				return fmt.Errorf("%w: invalid width: %v", errInvalidStreamHeader, err)
 			}
-			foundWidth = true
 		case 'H':
 			h.Height, err = strconv.Atoi(field[1:])
 			if err != nil {
 				return fmt.Errorf("%w: invalid height: %w", errInvalidStreamHeader, err)
 			}
-			foundHeight = true
 		case 'C':
 			h.ChromaSubsampling, ok = validChromaSubsamplingTypes[ChromaSubsamplingType(field[1:])]
 			if !ok {
@@ -91,7 +97,7 @@ func (h *StreamHeader) parse(reader *bufio.Reader) error {
 			return fmt.Errorf("%w: unknown field: %v", errInvalidStreamHeader, field)
 		}
 	}
-	if !foundWidth || !foundHeight {
+	if !seen['W'] || !seen['H'] {
 		return fmt.Errorf("%w: missing width or heigth", errInvalidStreamHeader)
 	}
 	if h.Width <= 0 {
