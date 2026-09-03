@@ -11,10 +11,10 @@ import (
 var errInvalidFrameHeader = errors.New("invalid frame header")
 
 type FrameHeader struct {
-	Presentation      PresentationType
-	TemporalSampling  TemporalSamplingType
-	ChromaSubsampling ChromaSamplingType
-	Metadata          []string
+	Presentation     PresentationType
+	TemporalSampling TemporalSamplingType
+	ChromaSampling   ChromaSamplingType
+	Metadata         []string
 }
 
 func (h *FrameHeader) parse(reader *bufio.Reader, requireFramingAndSampling bool) error {
@@ -55,7 +55,7 @@ func (h *FrameHeader) parse(reader *bufio.Reader, requireFramingAndSampling bool
 			}
 			h.Presentation = presentation
 			h.TemporalSampling = temporalSampling
-			h.ChromaSubsampling = chromaSampling
+			h.ChromaSampling = chromaSampling
 			hasFramingAndSampling = true
 		case 'X':
 			h.Metadata = append(h.Metadata, field[1:])
