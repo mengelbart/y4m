@@ -10,10 +10,10 @@ const (
 	itMixed            InterlacingType = "m"
 )
 
-var validInterlacingTypes = map[InterlacingType]InterlacingType{
-	itUnknown:          itUnknown,
-	itProgressive:      itProgressive,
-	itTopFieldFirst:    itTopFieldFirst,
-	itBottomFieldFirst: itBottomFieldFirst,
-	itMixed:            itMixed,
+var validInterlacingTypes = map[InterlacingType]bool{
+	itUnknown:          true,
+	itProgressive:      true,
+	itTopFieldFirst:    true,
+	itBottomFieldFirst: true,
+	itMixed:            true,
 }

@@ -14,14 +14,14 @@ const (
 	CSTMono     ChromaSubsamplingType = "mono"
 )
 
-var validChromaSubsamplingTypes = map[ChromaSubsamplingType]ChromaSubsamplingType{
-	CST420:      CST420,
-	CST420jpeg:  CST420jpeg,
-	CST420mpeg2: CST420mpeg2,
-	CST420paldv: CST420paldv,
-	CST411:      CST411,
-	CST422:      CST422,
-	CST444:      CST444,
-	CST444Alpha: CST444Alpha,
-	CSTMono:     CSTMono,
+var validChromaSubsamplingTypes = map[ChromaSubsamplingType]bool{
+	CST420:      true,
+	CST420jpeg:  true,
+	CST420mpeg2: true,
+	CST420paldv: true,
+	CST411:      true,
+	CST422:      true,
+	CST444:      true,
+	CST444Alpha: true,
+	CSTMono:     true,
 }

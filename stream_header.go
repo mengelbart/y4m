@@ -51,7 +51,6 @@ func (h *StreamHeader) parse(reader *bufio.Reader) error {
 	h.ChromaSubsampling = CST420jpeg
 	h.Interlacing = itUnknown
 
-	var ok bool
 	seen := map[byte]bool{}
 	for _, field := range fields {
 		tag := field[0]
@@ -74,15 +73,17 @@ func (h *StreamHeader) parse(reader *bufio.Reader) error {
 				return fmt.Errorf("%w: invalid height: %w", errInvalidStreamHeader, err)
 			}
 		case 'C':
-			h.ChromaSubsampling, ok = validChromaSubsamplingTypes[ChromaSubsamplingType(field[1:])]
-			if !ok {
+			chromaSubsampling := ChromaSubsamplingType(field[1:])
+			if !validChromaSubsamplingTypes[chromaSubsampling] {
 				return fmt.Errorf("%w: invalid chroma subsampling type: %v", errInvalidStreamHeader, field[1:])
 			}
+			h.ChromaSubsampling = chromaSubsampling
 		case 'I':
-			h.Interlacing, ok = validInterlacingTypes[InterlacingType(field[1:])]
-			if !ok {
+			interlacing := InterlacingType(field[1:])
+			if !validInterlacingTypes[interlacing] {
 				return fmt.Errorf("%w: invalid interlacing type: %v", errInvalidStreamHeader, field[1:])
 			}
+			h.Interlacing = interlacing
 		case 'F':
 			if err = h.FrameRate.parse(field[1:]); err != nil {
 				return fmt.Errorf("%w: %w", errInvalidStreamHeader, err)
