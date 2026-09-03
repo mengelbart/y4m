@@ -1,17 +1,19 @@
 package y4m
 
+// ChromaSubsamplingType is the chroma subsampling of a stream, taken from the
+// stream header C tag.
 type ChromaSubsamplingType string
 
 const (
-	CST420      ChromaSubsamplingType = "420"
-	CST420jpeg  ChromaSubsamplingType = "420jpeg"
-	CST420mpeg2 ChromaSubsamplingType = "420mpeg2"
-	CST420paldv ChromaSubsamplingType = "420paldv"
-	CST411      ChromaSubsamplingType = "411"
-	CST422      ChromaSubsamplingType = "422"
-	CST444      ChromaSubsamplingType = "444"
-	CST444Alpha ChromaSubsamplingType = "444alpha"
-	CSTMono     ChromaSubsamplingType = "mono"
+	CST420      ChromaSubsamplingType = "420"      // 4:2:0 with coincident chroma siting
+	CST420jpeg  ChromaSubsamplingType = "420jpeg"  // 4:2:0 with JPEG and MPEG-1 chroma siting
+	CST420mpeg2 ChromaSubsamplingType = "420mpeg2" // 4:2:0 with MPEG-2 chroma siting
+	CST420paldv ChromaSubsamplingType = "420paldv" // 4:2:0 with PAL-DV chroma siting
+	CST411      ChromaSubsamplingType = "411"      // 4:1:1
+	CST422      ChromaSubsamplingType = "422"      // 4:2:2
+	CST444      ChromaSubsamplingType = "444"      // 4:4:4, chroma not subsampled
+	CST444Alpha ChromaSubsamplingType = "444alpha" // 4:4:4 with an alpha plane
+	CSTMono     ChromaSubsamplingType = "mono"     // luma only
 )
 
 var validChromaSubsamplingTypes = map[ChromaSubsamplingType]bool{

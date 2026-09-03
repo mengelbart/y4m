@@ -12,6 +12,8 @@ import (
 var errInvalidStreamHeader = errors.New("invalid stream header")
 var errUnsupportedChromaSubsampling = errors.New("unsupported chroma subsampling type")
 
+// StreamHeader is the header at the start of a y4m stream. It applies to every
+// frame in the stream.
 type StreamHeader struct {
 	Width             int
 	Height            int

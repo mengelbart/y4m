@@ -9,6 +9,8 @@ import (
 
 var errInvalidRatio = errors.New("invalid ratio")
 
+// Ratio is the numerator and denominator of a stream header frame rate or
+// sample aspect ratio.
 type Ratio struct {
 	Numerator   int
 	Denominator int

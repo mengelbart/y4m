@@ -21,12 +21,15 @@ func WithMaxFrameSize(size int) Option {
 	}
 }
 
+// Reader reads frames from a y4m stream.
 type Reader struct {
 	reader       *bufio.Reader
 	streamHeader StreamHeader
 	maxFrameSize int
 }
 
+// NewReader reads the stream header from input and returns a Reader positioned
+// at the first frame.
 func NewReader(input io.Reader, opts ...Option) (*Reader, error) {
 	r := &Reader{
 		reader: bufio.NewReader(input),

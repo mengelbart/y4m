@@ -5,13 +5,13 @@ package y4m
 type PresentationType string
 
 const (
-	PTTopFieldFirst          PresentationType = "t"
-	PTTopFieldFirstRepeat    PresentationType = "T"
-	PTBottomFieldFirst       PresentationType = "b"
-	PTBottomFieldFirstRepeat PresentationType = "B"
-	PTProgressiveSingle      PresentationType = "1"
-	PTProgressiveDouble      PresentationType = "2"
-	PTProgressiveTriple      PresentationType = "3"
+	PTTopFieldFirst          PresentationType = "t" // top field first
+	PTTopFieldFirstRepeat    PresentationType = "T" // top field first, repeat the first field
+	PTBottomFieldFirst       PresentationType = "b" // bottom field first
+	PTBottomFieldFirstRepeat PresentationType = "B" // bottom field first, repeat the first field
+	PTProgressiveSingle      PresentationType = "1" // single progressive frame
+	PTProgressiveDouble      PresentationType = "2" // progressive frame, repeated once
+	PTProgressiveTriple      PresentationType = "3" // progressive frame, repeated twice
 )
 
 var validPresentationTypes = map[PresentationType]bool{
@@ -29,8 +29,8 @@ var validPresentationTypes = map[PresentationType]bool{
 type TemporalSamplingType string
 
 const (
-	TSTProgressive TemporalSamplingType = "p"
-	TSTInterlaced  TemporalSamplingType = "i"
+	TSTProgressive TemporalSamplingType = "p" // both fields sampled at the same time
+	TSTInterlaced  TemporalSamplingType = "i" // fields sampled at different times
 )
 
 var validTemporalSamplingTypes = map[TemporalSamplingType]bool{
@@ -44,9 +44,9 @@ var validTemporalSamplingTypes = map[TemporalSamplingType]bool{
 type ChromaSamplingType string
 
 const (
-	CHSTFrame   ChromaSamplingType = "p"
-	CHSTField   ChromaSamplingType = "i"
-	CHSTUnknown ChromaSamplingType = "?"
+	CHSTFrame   ChromaSamplingType = "p" // chroma subsampled over the whole frame
+	CHSTField   ChromaSamplingType = "i" // chroma subsampled over each field separately
+	CHSTUnknown ChromaSamplingType = "?" // unknown
 )
 
 var validChromaSamplingTypes = map[ChromaSamplingType]bool{

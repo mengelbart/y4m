@@ -10,6 +10,9 @@ import (
 
 var errInvalidFrameHeader = errors.New("invalid frame header")
 
+// FrameHeader is the header preceding each frame in a y4m stream. The framing
+// and sampling fields are set only if the frame carries an I tag, which is
+// mandatory for streams with mixed interlacing.
 type FrameHeader struct {
 	Presentation     PresentationType
 	TemporalSampling TemporalSamplingType
