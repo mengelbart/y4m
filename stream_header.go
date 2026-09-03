@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"io"
 	"strconv"
 	"strings"
 )
@@ -46,6 +47,10 @@ func (h *StreamHeader) frameSize() (int, error) {
 func (h *StreamHeader) parse(reader *bufio.Reader) error {
 	line, err := reader.ReadString('\n')
 	if err != nil {
+		// The stream header is mandatory, so any EOF here is truncation.
+		if errors.Is(err, io.EOF) {
+			return io.ErrUnexpectedEOF
+		}
 		return err
 	}
 	fields := strings.Fields(line)

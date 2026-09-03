@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"errors"
 	"fmt"
+	"io"
 	"strings"
 )
 
@@ -20,6 +21,10 @@ type FrameHeader struct {
 func (h *FrameHeader) parse(reader *bufio.Reader) error {
 	line, err := reader.ReadString('\n')
 	if err != nil {
+		// A partial line means the stream ended mid-header.
+		if errors.Is(err, io.EOF) && len(line) > 0 {
+			return io.ErrUnexpectedEOF
+		}
 		return err
 	}
 	fields := strings.Fields(line)
