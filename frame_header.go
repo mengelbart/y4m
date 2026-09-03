@@ -11,14 +11,13 @@ import (
 var errInvalidFrameHeader = errors.New("invalid frame header")
 
 type FrameHeader struct {
-	Presentation               string
-	TemporalSampling           string
-	ChromaSubsampling          string
-	RequiresFramingAndSampling bool
-	Metadata                   []string
+	Presentation      string
+	TemporalSampling  string
+	ChromaSubsampling string
+	Metadata          []string
 }
 
-func (h *FrameHeader) parse(reader *bufio.Reader) error {
+func (h *FrameHeader) parse(reader *bufio.Reader, requireFramingAndSampling bool) error {
 	line, err := reader.ReadString('\n')
 	if err != nil {
 		// A partial line means the stream ended mid-header.
@@ -52,7 +51,7 @@ func (h *FrameHeader) parse(reader *bufio.Reader) error {
 			return fmt.Errorf("%w: unknown field: %v", errInvalidFrameHeader, field)
 		}
 	}
-	if h.RequiresFramingAndSampling && !hasFramingAndSampling {
+	if requireFramingAndSampling && !hasFramingAndSampling {
 		return fmt.Errorf("%w: missing framing and sampling tag", errInvalidFrameHeader)
 	}
 	return nil
