@@ -103,5 +103,11 @@ func (h *StreamHeader) parse(reader *bufio.Reader) error {
 	if !foundWidth || !foundHeight {
 		return fmt.Errorf("%w: missing width or heigth", errInvalidStreamHeader)
 	}
+	if h.Width <= 0 {
+		return fmt.Errorf("%w: invalid width: %v", errInvalidStreamHeader, h.Width)
+	}
+	if h.Height <= 0 {
+		return fmt.Errorf("%w: invalid height: %v", errInvalidStreamHeader, h.Height)
+	}
 	return nil
 }
