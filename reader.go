@@ -42,7 +42,7 @@ func NewReader(input io.Reader, opts ...Option) (*Reader, *StreamHeader, error) 
 
 func (r *Reader) ReadNextFrame() ([]byte, *FrameHeader, error) {
 	header := &FrameHeader{}
-	if r.streamHeader.Interlacing == itMixed {
+	if r.streamHeader.Interlacing == ITMixed {
 		header.RequiresFramingAndSampling = true
 	}
 	if err := header.parse(r.reader); err != nil {

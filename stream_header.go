@@ -49,7 +49,7 @@ func (h *StreamHeader) parse(reader *bufio.Reader) error {
 	}
 	// set defaults
 	h.ChromaSubsampling = CST420jpeg
-	h.Interlacing = itUnknown
+	h.Interlacing = ITUnknown
 
 	seen := map[byte]bool{}
 	for _, field := range fields {

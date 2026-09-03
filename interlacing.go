@@ -3,17 +3,17 @@ package y4m
 type InterlacingType string
 
 const (
-	itUnknown          InterlacingType = "?"
-	itProgressive      InterlacingType = "p"
-	itTopFieldFirst    InterlacingType = "t"
-	itBottomFieldFirst InterlacingType = "b"
-	itMixed            InterlacingType = "m"
+	ITUnknown          InterlacingType = "?"
+	ITProgressive      InterlacingType = "p"
+	ITTopFieldFirst    InterlacingType = "t"
+	ITBottomFieldFirst InterlacingType = "b"
+	ITMixed            InterlacingType = "m"
 )
 
 var validInterlacingTypes = map[InterlacingType]bool{
-	itUnknown:          true,
-	itProgressive:      true,
-	itTopFieldFirst:    true,
-	itBottomFieldFirst: true,
-	itMixed:            true,
+	ITUnknown:          true,
+	ITProgressive:      true,
+	ITTopFieldFirst:    true,
+	ITBottomFieldFirst: true,
+	ITMixed:            true,
 }
