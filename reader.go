@@ -47,22 +47,49 @@ func (r *Reader) Header() StreamHeader {
 	return header
 }
 
+// ReadNextFrame reads the next frame into a newly allocated buffer.
 func (r *Reader) ReadNextFrame() ([]byte, *FrameHeader, error) {
-	header := &FrameHeader{}
-	if err := header.parse(r.reader, r.streamHeader.Interlacing == ITMixed); err != nil {
-		return nil, nil, err
-	}
-	size, err := r.streamHeader.frameSize()
+	size, err := r.frameBufferSize()
 	if err != nil {
 		return nil, nil, err
-	}
-	if r.maxFrameSize > 0 && size > r.maxFrameSize {
-		return nil, nil, fmt.Errorf("%w: %v bytes exceeds maximum of %v", errFrameTooLarge, size, r.maxFrameSize)
 	}
 	buf := make([]byte, size)
-	_, err = io.ReadFull(r.reader, buf)
+	n, header, err := r.ReadNextFrameInto(buf)
 	if err != nil {
 		return nil, nil, err
 	}
-	return buf, header, nil
+	return buf[:n], header, nil
+}
+
+// ReadNextFrameInto reads the next frame into buf and returns the number of
+// bytes written. It fails with io.ErrShortBuffer, without consuming anything,
+// if buf is smaller than a frame.
+func (r *Reader) ReadNextFrameInto(buf []byte) (int, *FrameHeader, error) {
+	size, err := r.frameBufferSize()
+	if err != nil {
+		return 0, nil, err
+	}
+	if len(buf) < size {
+		return 0, nil, fmt.Errorf("%w: need %v bytes, got %v", io.ErrShortBuffer, size, len(buf))
+	}
+	header := &FrameHeader{}
+	if err := header.parse(r.reader, r.streamHeader.Interlacing == ITMixed); err != nil {
+		return 0, nil, err
+	}
+	if _, err := io.ReadFull(r.reader, buf[:size]); err != nil {
+		return 0, nil, err
+	}
+	return size, header, nil
+}
+
+// frameBufferSize returns the size of a frame.
+func (r *Reader) frameBufferSize() (int, error) {
+	size, err := r.streamHeader.frameSize()
+	if err != nil {
+		return 0, err
+	}
+	if r.maxFrameSize > 0 && size > r.maxFrameSize {
+		return 0, fmt.Errorf("%w: %v bytes exceeds maximum of %v", errFrameTooLarge, size, r.maxFrameSize)
+	}
+	return size, nil
 }
