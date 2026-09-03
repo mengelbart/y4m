@@ -23,25 +23,11 @@ type StreamHeader struct {
 }
 
 func (h *StreamHeader) frameSize() (int, error) {
-	switch h.ChromaSubsampling {
-	case CST411, CST420, CST420jpeg, CST420mpeg2, CST420paldv:
-		return h.Width * h.Height * 3 / 2, nil
-
-	case CST422:
-		return h.Width * h.Height * 2, nil
-
-	case CST444:
-		return h.Width * h.Height * 3, nil
-
-	case CST444Alpha:
-		return h.Width * h.Height * 4, nil
-
-	case CSTMono:
-		return h.Width * h.Height, nil
-
-	default:
-		return 0, fmt.Errorf("%w: %v", errUnsupportedChromaSubsampling, h.ChromaSubsampling)
+	sizes, err := h.PlaneSizes()
+	if err != nil {
+		return 0, err
 	}
+	return sizes.Total(), nil
 }
 
 func (h *StreamHeader) parse(reader *bufio.Reader) error {
