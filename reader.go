@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"slices"
 )
 
 var errFrameTooLarge = errors.New("frame too large")
@@ -22,22 +23,28 @@ func WithMaxFrameSize(size int) Option {
 
 type Reader struct {
 	reader       *bufio.Reader
-	streamHeader *StreamHeader
+	streamHeader StreamHeader
 	maxFrameSize int
 }
 
-func NewReader(input io.Reader, opts ...Option) (*Reader, *StreamHeader, error) {
+func NewReader(input io.Reader, opts ...Option) (*Reader, error) {
 	r := &Reader{
-		reader:       bufio.NewReader(input),
-		streamHeader: &StreamHeader{},
+		reader: bufio.NewReader(input),
 	}
 	for _, opt := range opts {
 		opt(r)
 	}
 	if err := r.streamHeader.parse(r.reader); err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	return r, r.streamHeader, nil
+	return r, nil
+}
+
+// Header returns a copy of the stream header.
+func (r *Reader) Header() StreamHeader {
+	header := r.streamHeader
+	header.Metadata = slices.Clone(r.streamHeader.Metadata)
+	return header
 }
 
 func (r *Reader) ReadNextFrame() ([]byte, *FrameHeader, error) {

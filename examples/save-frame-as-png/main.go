@@ -23,10 +23,11 @@ func main() {
 	}
 	defer file.Close()
 
-	reader, streamHeader, err := y4m.NewReader(file)
+	reader, err := y4m.NewReader(file)
 	if err != nil {
 		log.Fatal(err)
 	}
+	streamHeader := reader.Header()
 	for range *skip {
 		_, _, err = reader.ReadNextFrame()
 		if err != nil {
@@ -52,7 +53,7 @@ func main() {
 	}
 }
 
-func frameToImage(h *y4m.StreamHeader, data []byte) (image.Image, error) {
+func frameToImage(h y4m.StreamHeader, data []byte) (image.Image, error) {
 	sizes, err := h.PlaneSizes()
 	if err != nil {
 		return nil, err
