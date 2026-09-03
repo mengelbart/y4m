@@ -28,7 +28,7 @@ func (h *FrameHeader) parse(reader *bufio.Reader) error {
 	}
 	magicString, fields := fields[0], fields[1:]
 	if magicString != "FRAME" {
-		return fmt.Errorf("%w: invalid magic string", errInvalidStreamHeader)
+		return fmt.Errorf("%w: invalid magic string", errInvalidFrameHeader)
 	}
 	var hasFrameingAndSampling bool
 	for _, field := range fields {
