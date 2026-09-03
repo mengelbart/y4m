@@ -109,5 +109,32 @@ func (h *StreamHeader) parse(reader *bufio.Reader) error {
 	if h.Height <= 0 {
 		return fmt.Errorf("%w: invalid height: %v", errInvalidStreamHeader, h.Height)
 	}
+	return h.validateDimensions()
+}
+
+// validateDimensions checks that the frame dimensions divide evenly into the
+// chroma planes of the configured subsampling type:
+//
+//	420, 420jpeg, 420mpeg2, 420paldv  even width, even height
+//	422                               even width
+//	411                               width multiple of 4
+//	mono, 444, 444alpha               no constraint
+func (h *StreamHeader) validateDimensions() error {
+	switch h.ChromaSubsampling {
+	case CST411:
+		if h.Width%4 != 0 {
+			return fmt.Errorf("%w: width %v must be a multiple of 4 for chroma subsampling %v", errInvalidStreamHeader, h.Width, h.ChromaSubsampling)
+		}
+
+	case CST420, CST420jpeg, CST420mpeg2, CST420paldv:
+		if h.Width%2 != 0 || h.Height%2 != 0 {
+			return fmt.Errorf("%w: width %v and height %v must be even for chroma subsampling %v", errInvalidStreamHeader, h.Width, h.Height, h.ChromaSubsampling)
+		}
+
+	case CST422:
+		if h.Width%2 != 0 {
+			return fmt.Errorf("%w: width %v must be even for chroma subsampling %v", errInvalidStreamHeader, h.Width, h.ChromaSubsampling)
+		}
+	}
 	return nil
 }
