@@ -35,7 +35,7 @@ func (h *FrameHeader) parse(reader *bufio.Reader) error {
 	if magicString != "FRAME" {
 		return fmt.Errorf("%w: invalid magic string", errInvalidFrameHeader)
 	}
-	var hasFrameingAndSampling bool
+	var hasFramingAndSampling bool
 	for _, field := range fields {
 		switch field[0] {
 		case 'I':
@@ -45,14 +45,14 @@ func (h *FrameHeader) parse(reader *bufio.Reader) error {
 			h.Presentation = string(field[1])
 			h.TemporalSampling = string(field[2])
 			h.ChromaSubsampling = string(field[3])
-			hasFrameingAndSampling = true
+			hasFramingAndSampling = true
 		case 'X':
 			h.Metadata = append(h.Metadata, field[1:])
 		default:
 			return fmt.Errorf("%w: unknown field: %v", errInvalidFrameHeader, field)
 		}
 	}
-	if h.RequiresFramingAndSampling && !hasFrameingAndSampling {
+	if h.RequiresFramingAndSampling && !hasFramingAndSampling {
 		return fmt.Errorf("%w: missing framing and sampling tag", errInvalidFrameHeader)
 	}
 	return nil
