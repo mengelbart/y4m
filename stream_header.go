@@ -9,6 +9,7 @@ import (
 )
 
 var errInvalidStreamHeader = errors.New("invalid stream header")
+var errUnsupportedChromaSubsampling = errors.New("unsupported chroma subsampling type")
 
 type StreamHeader struct {
 	Width             int
@@ -20,28 +21,25 @@ type StreamHeader struct {
 	Metadata          []string
 }
 
-func (h *StreamHeader) frameSize() int {
+func (h *StreamHeader) frameSize() (int, error) {
 	switch h.ChromaSubsampling {
-	case CST411:
-		panic(fmt.Sprintf("not implemented y4m.ChromaSubsamplingType: %#v", h.ChromaSubsampling))
-
-	case CST420, CST420jpeg, CST420mpeg2, CST420paldv:
-		return h.Width * h.Height * 3 / 2
+	case CST411, CST420, CST420jpeg, CST420mpeg2, CST420paldv:
+		return h.Width * h.Height * 3 / 2, nil
 
 	case CST422:
-		return h.Width * h.Height * 2
+		return h.Width * h.Height * 2, nil
 
 	case CST444:
-		return h.Width * h.Height * 3
+		return h.Width * h.Height * 3, nil
 
 	case CST444Alpha:
-		return h.Width * h.Height * 4
+		return h.Width * h.Height * 4, nil
 
 	case CSTMono:
-		panic(fmt.Sprintf("not implemented y4m.ChromaSubsamplingType: %#v", h.ChromaSubsampling))
+		return h.Width * h.Height, nil
 
 	default:
-		panic(fmt.Sprintf("unexpected y4m.ChromaSubsamplingType: %#v", h.ChromaSubsampling))
+		return 0, fmt.Errorf("%w: %v", errUnsupportedChromaSubsampling, h.ChromaSubsampling)
 	}
 }
 

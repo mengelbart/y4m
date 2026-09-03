@@ -29,9 +29,12 @@ func (r *Reader) ReadNextFrame() ([]byte, *FrameHeader, error) {
 	if err := header.parse(r.reader); err != nil {
 		return nil, nil, err
 	}
-	size := r.streamHeader.frameSize()
+	size, err := r.streamHeader.frameSize()
+	if err != nil {
+		return nil, nil, err
+	}
 	buf := make([]byte, size)
-	_, err := io.ReadFull(r.reader, buf)
+	_, err = io.ReadFull(r.reader, buf)
 	if err != nil {
 		return nil, nil, err
 	}
