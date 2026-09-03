@@ -31,8 +31,11 @@ func (h *StreamHeader) frameSize() int {
 	case CST422:
 		return h.Width * h.Height * 2
 
-	case CST444, CST444Alpha:
+	case CST444:
 		return h.Width * h.Height * 3
+
+	case CST444Alpha:
+		return h.Width * h.Height * 4
 
 	case CSTMono:
 		panic(fmt.Sprintf("not implemented y4m.ChromaSubsamplingType: %#v", h.ChromaSubsampling))
