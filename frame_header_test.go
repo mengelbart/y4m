@@ -95,6 +95,7 @@ func TestFrameHeaderParseErrors(t *testing.T) {
 		{"invalid presentation", "FRAME Ixpp\n"},
 		{"invalid temporal sampling", "FRAME Itzp\n"},
 		{"invalid chroma sampling", "FRAME Itpz\n"},
+		{"duplicate framing and sampling tag", "FRAME Itpp Itpp\n"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

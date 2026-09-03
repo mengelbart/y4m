@@ -38,6 +38,10 @@ func (h *FrameHeader) parse(reader *bufio.Reader, requireFramingAndSampling bool
 	for _, field := range fields {
 		switch field[0] {
 		case 'I':
+			// X is the only tag that may appear more than once.
+			if hasFramingAndSampling {
+				return fmt.Errorf("%w: duplicate field: %v", errInvalidFrameHeader, field)
+			}
 			if len(field[1:]) != 3 {
 				return fmt.Errorf("%w: invalid framing and sampling tag: %v", errInvalidFrameHeader, field[1:])
 			}
