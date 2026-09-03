@@ -77,6 +77,10 @@ func (r *Reader) ReadNextFrameInto(buf []byte) (int, *FrameHeader, error) {
 		return 0, nil, err
 	}
 	if _, err := io.ReadFull(r.reader, buf[:size]); err != nil {
+		// The frame header was consumed, so any EOF here is truncation.
+		if errors.Is(err, io.EOF) {
+			return 0, nil, io.ErrUnexpectedEOF
+		}
 		return 0, nil, err
 	}
 	return size, header, nil
