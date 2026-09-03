@@ -30,18 +30,18 @@ func TestFrameHeaderParse(t *testing.T) {
 			name:  "framing and sampling tag",
 			input: "FRAME Itpi\n",
 			want: FrameHeader{
-				Presentation:      PTTopFieldFirst,
-				TemporalSampling:  TSTProgressive,
-				ChromaSubsampling: CHSTField,
+				Presentation:     PTTopFieldFirst,
+				TemporalSampling: TSTProgressive,
+				ChromaSampling:   CHSTField,
 			},
 		},
 		{
 			name:  "unknown sampling",
 			input: "FRAME I1??\n",
 			want: FrameHeader{
-				Presentation:      PTProgressiveSingle,
-				TemporalSampling:  TSTUnknown,
-				ChromaSubsampling: CHSTUnknown,
+				Presentation:     PTProgressiveSingle,
+				TemporalSampling: TSTUnknown,
+				ChromaSampling:   CHSTUnknown,
 			},
 		},
 		{
