@@ -11,9 +11,9 @@ import (
 var errInvalidFrameHeader = errors.New("invalid frame header")
 
 type FrameHeader struct {
-	Presentation      string
-	TemporalSampling  string
-	ChromaSubsampling string
+	Presentation      PresentationType
+	TemporalSampling  TemporalSamplingType
+	ChromaSubsampling ChromaSamplingType
 	Metadata          []string
 }
 
@@ -41,9 +41,21 @@ func (h *FrameHeader) parse(reader *bufio.Reader, requireFramingAndSampling bool
 			if len(field[1:]) != 3 {
 				return fmt.Errorf("%w: invalid framing and sampling tag: %v", errInvalidFrameHeader, field[1:])
 			}
-			h.Presentation = string(field[1])
-			h.TemporalSampling = string(field[2])
-			h.ChromaSubsampling = string(field[3])
+			presentation := PresentationType(field[1])
+			if !validPresentationTypes[presentation] {
+				return fmt.Errorf("%w: invalid presentation type: %v", errInvalidFrameHeader, string(field[1]))
+			}
+			temporalSampling := TemporalSamplingType(field[2])
+			if !validTemporalSamplingTypes[temporalSampling] {
+				return fmt.Errorf("%w: invalid temporal sampling type: %v", errInvalidFrameHeader, string(field[2]))
+			}
+			chromaSampling := ChromaSamplingType(field[3])
+			if !validChromaSamplingTypes[chromaSampling] {
+				return fmt.Errorf("%w: invalid chroma sampling type: %v", errInvalidFrameHeader, string(field[3]))
+			}
+			h.Presentation = presentation
+			h.TemporalSampling = temporalSampling
+			h.ChromaSubsampling = chromaSampling
 			hasFramingAndSampling = true
 		case 'X':
 			h.Metadata = append(h.Metadata, field[1:])
