@@ -36,11 +36,11 @@ func TestFrameHeaderParse(t *testing.T) {
 			},
 		},
 		{
-			name:  "unknown sampling",
-			input: "FRAME I1??\n",
+			name:  "unknown chroma sampling",
+			input: "FRAME I1p?\n",
 			want: FrameHeader{
 				Presentation:     PTProgressiveSingle,
-				TemporalSampling: TSTUnknown,
+				TemporalSampling: TSTProgressive,
 				ChromaSampling:   CHSTUnknown,
 			},
 		},
@@ -94,6 +94,7 @@ func TestFrameHeaderParseErrors(t *testing.T) {
 		{"tag too long", "FRAME Itppp\n"},
 		{"invalid presentation", "FRAME Ixpp\n"},
 		{"invalid temporal sampling", "FRAME Itzp\n"},
+		{"unknown temporal sampling", "FRAME It?p\n"},
 		{"invalid chroma sampling", "FRAME Itpz\n"},
 		{"duplicate framing and sampling tag", "FRAME Itpp Itpp\n"},
 	}

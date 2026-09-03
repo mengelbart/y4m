@@ -31,13 +31,11 @@ type TemporalSamplingType string
 const (
 	TSTProgressive TemporalSamplingType = "p"
 	TSTInterlaced  TemporalSamplingType = "i"
-	TSTUnknown     TemporalSamplingType = "?"
 )
 
 var validTemporalSamplingTypes = map[TemporalSamplingType]bool{
 	TSTProgressive: true,
 	TSTInterlaced:  true,
-	TSTUnknown:     true,
 }
 
 // ChromaSamplingType is the third character of a frame header framing and
